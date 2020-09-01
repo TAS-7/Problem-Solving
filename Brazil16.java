@@ -191,14 +191,9 @@ public class Brazil16 {
 		
 		in.close();
 		for(Teams team : teams) {
-			double prob = getP(4, pWin, pRound, team,teams);
+			double p = getP(4, pWin, pRound, team,teams)*100;
+			System.out.println(team.name + "  "+"p="+ String.format("%.2f", p)+"%");
 		}
-		
-		for(int i=0; i<16; i++) {
-			double p = pRound [i][4]*100;
-			System.out.println(teams.get(i).name + "  "+"p="+ String.format("%.2f", p)+"%");
-		}
-		
 		
 
 	}
