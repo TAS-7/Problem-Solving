@@ -6,20 +6,9 @@ class Teams{
 	int level;
 	int num;
 	
-	/**
-	 * @return the num
-	 */
-	public int getNum() {
-		return num;
-	}
+	
 
-	/**
-	 * @param num the num to set
-	 */
-	public void setNum(int num) {
-		this.num = num;
-	}
-
+	
 	Teams(String name, String group, int level, int num ){
 		this.name = name;
 		this.group = group;
@@ -27,47 +16,11 @@ class Teams{
 		this.num = num;
 	}
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+	
 
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+	
 
-	/**
-	 * @return the group
-	 */
-	public String getGroup() {
-		return group;
-	}
-
-	/**
-	 * @param group the group to set
-	 */
-	public void setGroup(String group) {
-		this.group = group;
-	}
-
-	/**
-	 * @return the level
-	 */
-	public int getLevel() {
-		return level;
-	}
-
-	/**
-	 * @param level the level to set
-	 */
-	public void setLevel(int level) {
-		this.level = level;
-	}
+	
 	
 	public boolean canPlay(int round, Teams team) {
 		boolean canPlay = false;
@@ -84,26 +37,44 @@ class Teams{
 		//teams in group A can only play teams in group B  vice versa
 		//& teams in group C can only play teams in group D vice versa, in the semi-finals
 		else if (round == 2) {
-			if((this.group =="A" && team.group =="B" )||(this.group =="B" && team.group =="A" )) {
+			if(this.group =="A" && team.group =="B" ) {
 				canPlay = true;
 			}
-			if((this.group =="D" && team.group =="C" )||(this.group =="C" && team.group =="D" )) {
+			if(this.group =="B" && team.group =="A" ) {
+				canPlay = true;
+			}
+			if(this.group =="D" && team.group =="C" ) {
+				canPlay = true;
+			}
+			if(this.group =="C" && team.group =="D" ) {
 				canPlay = true;
 			}
 		}
 		//teams in group A or B can only play teams in group C or D  vice versa,
 		//in the final
 		else if (round == 3) {
-			if((this.group =="A" && team.group =="C" )||(this.group =="A" && team.group =="D" )) {
+			if(this.group =="A" && team.group =="C") {
 				canPlay = true;
 			}
-			if((this.group =="B" && team.group =="C" )||(this.group =="B" && team.group =="D" )) {
+			if(this.group =="A" && team.group =="D" ) {
 				canPlay = true;
 			}
-			if((this.group =="C" && team.group =="A" )||(this.group =="C" && team.group =="B" )) {
+			if(this.group =="B" && team.group =="C") {
 				canPlay = true;
 			}
-			if((this.group =="D" && team.group =="A" )||(this.group =="B" && team.group =="B" )) {
+			if(this.group =="B" && team.group =="D") {
+				canPlay = true;
+			}
+			if(this.group =="C" && team.group =="A") {
+				canPlay = true;
+			}
+			if(this.group =="C" && team.group =="B" ) {
+				canPlay = true;
+			}
+			if(this.group =="D" && team.group =="A") {
+				canPlay = true;
+			}
+			if(this.group =="D" && team.group =="B" ) {
 				canPlay = true;
 			}
 		
@@ -116,10 +87,21 @@ class Teams{
 	}
 	
 }
-public class Brazil16 {
+
+
+class Brazil16{
     
-	
-	public static double getP(int round, double [][] pWin, double [][]pRound, Teams team, ArrayList<Teams> teams) {
+	 static int maxLength(ArrayList<Teams> teams) {
+		int max =0;
+		for(Teams t: teams) {
+			int length = t.name.length();
+			if(length> max) {
+				max = length;
+			}
+		}
+		return max;
+	}
+	 static double getP(int round, double [][] pWin, double [][]pRound, Teams team, ArrayList<Teams> teams) {
 		if(round==0) {
 			pRound[team.num][round]=1;
 			return 1;
@@ -149,11 +131,13 @@ public class Brazil16 {
 		double [][] pRound = new double [16][5];
 		
 		Scanner in = new Scanner(System.in);
-		for(int i=0; i<32; i++) {
+		Teams team;
+		String name;
+		for(int i=0; i<32; ++i) {
 			//reading in team names
-			String name = in.nextLine();
+			name = in.nextLine();
 			if(i <16) {
-				Teams team;
+				
 				if(i <2) {
 					team = new Teams (name,"A",1,i);
 				}
@@ -183,19 +167,28 @@ public class Brazil16 {
 			//reading in the given probabilities
 			else {
 				String [] teamProbs = name.split(" ");
-				for(int j=0; j<16; j++) {
-					pWin [i-16][j]=(double)Integer.parseInt(teamProbs[j])/100;
+				for(int j=0; j<16; ++j) {
+					pWin [i-16][j]=Integer.parseInt(teamProbs[j])/100.00;
 				}
 			}
 		}
 		
 		in.close();
-		for(Teams team : teams) {
-			double p = getP(4, pWin, pRound, team,teams)*100;
-			System.out.println(team.name + "  "+"p="+ String.format("%.2f", p)+"%");
+		for(int i=0; i<16; ++i) {
+			double p = getP(4, pWin, pRound, teams.get(i),teams)*100;
+			System.out.print(teams.get(i).name);
+			for(int j=0; j<maxLength(teams)-teams.get(i).name.length()+1; j++) {
+				System.out.print(" ");
+			}
+			System.out.print("p="+ String.format("%.2f", p)+"%");
+			System.out.println("");
 		}
 		
-
+		
+		
+		
+		
+		
 	}
 
 }
